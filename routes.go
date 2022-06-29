@@ -22,18 +22,17 @@ func getTask(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
-	} else {
-		task, err2 := repository.GetTask(id)
+		return
+	}
 
-		if err2 != nil {
-			c.JSON(http.StatusNotFound, gin.H{
-				"error": err2.Error(),
-			})
-		} else {
-			c.JSON(http.StatusOK, gin.H{
-				"task": task,
-			})
-		}
+	if task, err2 := repository.GetTask(id); err2 != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": err2.Error(),
+		})
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"task": task,
+		})
 	}
 }
 
@@ -60,23 +59,25 @@ func deleteTask(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Invalid id",
 		})
-	} else {
-		if v, err := strconv.Atoi(id); err == nil {
-			err2 := repository.DeleteTask(v)
-
-			if err2 != nil {
-				c.JSON(http.StatusBadRequest, gin.H{
-					"error": err2,
-				})
-			} else {
-				c.String(200, "Success")
-			}
-		} else {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"error": err,
-			})
-		}
+		return
 	}
+
+	if v, err := strconv.Atoi(id); err == nil {
+		err2 := repository.DeleteTask(v)
+
+		if err2 != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": err2,
+			})
+		} else {
+			c.String(200, "Success")
+		}
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+	}
+
 }
 
 func updateTask(c *gin.Context) {
