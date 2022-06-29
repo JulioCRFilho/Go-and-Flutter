@@ -56,6 +56,7 @@ func DeleteTask(id int) error {
 	}
 
 	if len(newSlice) < len(_tasks) {
+		_tasks = newSlice
 		return nil
 	} else {
 		return errors.New("task not found")
