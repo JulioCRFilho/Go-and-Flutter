@@ -62,3 +62,19 @@ func DeleteTask(id int) error {
 		return errors.New("task not found")
 	}
 }
+
+func UpdateTask(task model.Task) error {
+	var oldTask model.Task
+	for i, v := range _tasks {
+		if v.Id == task.Id {
+			oldTask = v
+			_tasks[i] = task
+		}
+	}
+
+	if oldTask == task {
+		return errors.New("task not updated")
+	} else {
+		return nil
+	}
+}

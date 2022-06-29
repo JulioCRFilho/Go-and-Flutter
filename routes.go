@@ -66,15 +66,36 @@ func deleteTask(c *gin.Context) {
 
 			if err2 != nil {
 				c.JSON(http.StatusBadRequest, gin.H{
-					"error": "Task not found",
+					"error": err2,
 				})
 			} else {
 				c.String(200, "Success")
 			}
 		} else {
 			c.JSON(http.StatusBadRequest, gin.H{
-				"error": "Invalid id",
+				"error": err,
 			})
+		}
+	}
+}
+
+func updateTask(c *gin.Context) {
+	var task model.Task
+	err := c.ShouldBind(&task)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+	} else {
+		err2 := repository.UpdateTask(task)
+
+		if err2 != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": err2,
+			})
+		} else {
+			c.String(200, "Updated")
 		}
 	}
 }
