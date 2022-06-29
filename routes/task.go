@@ -1,4 +1,4 @@
-package main
+package routes
 
 import (
 	"firstProject/model"
@@ -7,6 +7,17 @@ import (
 	"net/http"
 	"strconv"
 )
+
+func DefineTaskRoutes(c *gin.Engine) {
+	c.GET("/tasks", getTasks)
+	r := c.Group("/task")
+	{
+		r.GET(":id", getTask)
+		r.POST("", createTask)
+		r.PUT("", updateTask)
+		r.DELETE(":id", deleteTask)
+	}
+}
 
 func getTasks(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
@@ -77,7 +88,6 @@ func deleteTask(c *gin.Context) {
 			"error": err,
 		})
 	}
-
 }
 
 func updateTask(c *gin.Context) {
