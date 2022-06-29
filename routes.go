@@ -52,3 +52,29 @@ func createTask(c *gin.Context) {
 		})
 	}
 }
+
+func deleteTask(c *gin.Context) {
+	id := c.Param("id")
+
+	if id == "" {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Invalid id",
+		})
+	} else {
+		if v, err := strconv.Atoi(id); err == nil {
+			err2 := repository.DeleteTask(v)
+
+			if err2 != nil {
+				c.JSON(http.StatusBadRequest, gin.H{
+					"error": "Task not found",
+				})
+			} else {
+				c.String(200, "Success")
+			}
+		} else {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": "Invalid id",
+			})
+		}
+	}
+}

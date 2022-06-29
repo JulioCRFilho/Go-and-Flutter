@@ -9,9 +9,11 @@ import (
 func main() {
 	r := gin.Default()
 	r.Use(cors.Default())
+
 	r.GET("/tasks", getTasks)
 	r.GET("/task/{id}", getTask)
 	r.POST("/task", createTask)
+	r.DELETE("/task/{id}", deleteTask)
 
 	r.Use(static.Serve("/", static.LocalFile("./static", false)))
 

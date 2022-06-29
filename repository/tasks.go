@@ -46,3 +46,18 @@ func CreateTask(task model.Task) {
 	task.Id = len(_tasks) + 1
 	_tasks = append(_tasks, task)
 }
+
+func DeleteTask(id int) error {
+	var newSlice []model.Task
+	for _, v := range _tasks {
+		if v.Id != id {
+			newSlice = append(newSlice, v)
+		}
+	}
+
+	if len(newSlice) < len(_tasks) {
+		return nil
+	} else {
+		return errors.New("task not found")
+	}
+}
