@@ -11,10 +11,10 @@ func main() {
 	r.Use(cors.Default())
 
 	r.GET("/tasks", getTasks)
-	r.GET("/task/{id}", getTask)
+	r.GET("/task/:id", getTask)
 	r.POST("/task", createTask)
 	r.PUT("/task", updateTask)
-	r.DELETE("/task/{id}", deleteTask)
+	r.DELETE("/task/:id", deleteTask)
 
 	r.Use(static.Serve("/", static.LocalFile("./static", false)))
 

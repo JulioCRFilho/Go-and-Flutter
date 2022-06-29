@@ -23,11 +23,11 @@ func getTask(c *gin.Context) {
 			"error": err.Error(),
 		})
 	} else {
-		task, err := repository.GetTask(id)
+		task, err2 := repository.GetTask(id)
 
-		if err != nil {
+		if err2 != nil {
 			c.JSON(http.StatusNotFound, gin.H{
-				"error": err.Error(),
+				"error": err2.Error(),
 			})
 		} else {
 			c.JSON(http.StatusOK, gin.H{

@@ -37,7 +37,7 @@ func GetTask(id int) (model.Task, error) {
 	if task.Id == id {
 		return task, nil
 	} else {
-		err := fmt.Sprintf("Task com id %d", id)
+		err := fmt.Sprintf("task com id %d não encontrada", id)
 		return model.Task{}, errors.New(err)
 	}
 }
@@ -59,7 +59,7 @@ func DeleteTask(id int) error {
 		_tasks = newSlice
 		return nil
 	} else {
-		return errors.New("task not found")
+		return errors.New("task não encontrada")
 	}
 }
 
@@ -73,7 +73,7 @@ func UpdateTask(task model.Task) error {
 	}
 
 	if oldTask == task {
-		return errors.New("task not updated")
+		return errors.New("task não atualizada")
 	} else {
 		return nil
 	}
