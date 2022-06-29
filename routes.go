@@ -38,20 +38,17 @@ func getTask(c *gin.Context) {
 }
 
 func createTask(c *gin.Context) {
-	name := c.Param("name")
-	dueDate := c.Param("dueDate")
-	createdDate := c.Param("createdDate")
+	var task model.Task
 
-	task := model.Task{
-		Id:          len(repository.GetTasks()) + 1,
-		Name:        name,
-		DueDate:     dueDate,
-		CreatedDate: createdDate,
+	if err := c.ShouldBind(&task); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+	} else {
+		repository.CreateTask(task)
+
+		c.JSON(http.StatusCreated, gin.H{
+			"status": "success",
+		})
 	}
-
-	repository.CreateTask(task)
-
-	c.JSON(http.StatusCreated, gin.H{
-		"status": "success",
-	})
 }

@@ -2,10 +2,10 @@ package model
 
 type Task struct {
 	Id          int    `json:"id"`
-	Name        string `json:"name"`
-	done        bool
-	DueDate     string `json:"dueDate"`
-	CreatedDate string `json:"createdDate"`
+	Name        string `json:"name" binding:"required"`
+	done        bool   `default:"true"`
+	DueDate     string `json:"dueDate" binding:"required"`
+	CreatedDate string `json:"createdDate" binding:"required"`
 }
 
 func (t *Task) GetDone() bool {

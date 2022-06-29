@@ -43,5 +43,6 @@ func GetTask(id int) (model.Task, error) {
 }
 
 func CreateTask(task model.Task) {
+	task.Id = len(_tasks) + 1
 	_tasks = append(_tasks, task)
 }
