@@ -68,7 +68,7 @@ func deleteTask(c *gin.Context) {
 
 	if id == "" {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid id",
+			"error": "Id inválido",
 		})
 		return
 	}
@@ -78,14 +78,14 @@ func deleteTask(c *gin.Context) {
 
 		if err2 != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
-				"error": err2,
+				"error": err2.Error(),
 			})
 		} else {
 			c.String(200, "Success")
 		}
 	} else {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err,
+			"error": err.Error(),
 		})
 	}
 }
@@ -96,14 +96,14 @@ func updateTask(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err,
+			"error": err.Error(),
 		})
 	} else {
 		err2 := repository.UpdateTask(task)
 
 		if err2 != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
-				"error": err2,
+				"error": err2.Error(),
 			})
 		} else {
 			c.String(200, "Updated")

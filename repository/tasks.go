@@ -19,6 +19,12 @@ var _tasks = []model.Task{
 		DueDate:     "30/06/22",
 		CreatedDate: "22/06/22",
 	},
+	{
+		Id:          3,
+		Name:        "Teste 3",
+		DueDate:     "03/07/22",
+		CreatedDate: "22/06/22",
+	},
 }
 
 func GetTasks() []model.Task {
@@ -31,6 +37,7 @@ func GetTask(id int) (model.Task, error) {
 	for _, v := range _tasks {
 		if v.Id == id {
 			task = v
+			break
 		}
 	}
 
@@ -49,13 +56,14 @@ func CreateTask(task model.Task) {
 
 func DeleteTask(id int) error {
 	var newSlice []model.Task
-	for _, v := range _tasks {
-		if v.Id != id {
-			newSlice = append(newSlice, v)
+	for i, v := range _tasks {
+		if v.Id == id {
+			newSlice = append(_tasks[:i], _tasks[i+1:]...)
+			break
 		}
 	}
 
-	if len(newSlice) < len(_tasks) {
+	if len(newSlice)+1 == len(_tasks) {
 		_tasks = newSlice
 		return nil
 	} else {
@@ -69,6 +77,7 @@ func UpdateTask(task model.Task) error {
 		if v.Id == task.Id {
 			oldTask = v
 			_tasks[i] = task
+			break
 		}
 	}
 

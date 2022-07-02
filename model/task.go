@@ -3,7 +3,7 @@ package model
 type Task struct {
 	Id          int    `json:"id"`
 	Name        string `json:"name" binding:"required"`
-	done        bool   `default:"true"`
+	done        bool   `default:"false"`
 	DueDate     string `json:"dueDate" binding:"required"`
 	CreatedDate string `json:"createdDate" binding:"required"`
 }
