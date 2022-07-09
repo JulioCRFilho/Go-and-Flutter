@@ -1,6 +1,7 @@
 package main
 
 import (
+	"firstProject/repository/dao"
 	"firstProject/repository/db"
 	"firstProject/routes"
 	"github.com/gin-contrib/cors"
@@ -10,6 +11,7 @@ import (
 
 func main() {
 	db.CreateClient()
+	dao.GetDatabases()
 
 	r := gin.Default()
 	r.Use(cors.Default())

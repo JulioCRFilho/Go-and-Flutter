@@ -17,6 +17,7 @@ func CreateClient() {
 	clientOptions := options.Client().ApplyURI(conn).SetServerAPIOptions(serverAPIOptions)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+
 	defer cancel()
 
 	Client, err = mongo.Connect(ctx, clientOptions)
