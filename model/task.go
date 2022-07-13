@@ -1,7 +1,7 @@
 package model
 
 type Task struct {
-	Id          int    `json:"id"`
+	Id          int    `bson:"_id"`
 	Name        string `json:"name" binding:"required"`
 	done        bool   `default:"false"`
 	DueDate     string `json:"dueDate" binding:"required"`

@@ -2,7 +2,7 @@ package routes
 
 import (
 	"firstProject/model"
-	"firstProject/repository"
+	"firstProject/repository/dao"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -20,9 +20,13 @@ func DefineTaskRoutes(c *gin.Engine) {
 }
 
 func getTasks(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"tasks": repository.GetTasks(),
-	})
+	if tasks, err := dao.GetTasks(); err != nil {
+		c.String(500, err.Error())
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"tasks": tasks,
+		})
+	}
 }
 
 func getTask(c *gin.Context) {
@@ -36,9 +40,9 @@ func getTask(c *gin.Context) {
 		return
 	}
 
-	if task, err2 := repository.GetTask(id); err2 != nil {
+	if task := dao.GetTask(id); task == nil {
 		c.JSON(http.StatusNotFound, gin.H{
-			"error": err2.Error(),
+			"error": "task não encontrada",
 		})
 	} else {
 		c.JSON(http.StatusOK, gin.H{
@@ -55,7 +59,12 @@ func createTask(c *gin.Context) {
 			"error": err.Error(),
 		})
 	} else {
-		repository.CreateTask(task)
+		if err2 := dao.CreateTask(task); err2 != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": err2.Error(),
+			})
+			return
+		}
 
 		c.JSON(http.StatusCreated, gin.H{
 			"status": "success",
@@ -74,7 +83,7 @@ func deleteTask(c *gin.Context) {
 	}
 
 	if v, err := strconv.Atoi(id); err == nil {
-		err2 := repository.DeleteTask(v)
+		err2 := dao.DeleteTask(v)
 
 		if err2 != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
@@ -99,7 +108,7 @@ func updateTask(c *gin.Context) {
 			"error": err.Error(),
 		})
 	} else {
-		err2 := repository.UpdateTask(task)
+		err2 := dao.UpdateTask(task)
 
 		if err2 != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
