@@ -7,6 +7,7 @@ import (
 	util "firstProject/repository"
 	"firstProject/repository/db"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"time"
 )
@@ -39,8 +40,28 @@ func GetTasks() (*[]model.Task, error) {
 	}
 }
 
-func GetTask(id int) *model.Task {
-	return nil
+func GetTask(id string) *model.Task {
+	ctx, cancel := util.Context()
+
+	defer cancel()
+
+	tasks := getCollection()
+
+	var task model.Task
+
+	objId, err2 := primitive.ObjectIDFromHex(id)
+
+	if err2 != nil {
+		print("err2 :", err2.Error())
+		return nil
+	}
+
+	if err := tasks.FindOne(ctx, bson.D{{"_id", objId}}).Decode(&task); err != nil {
+		print("erro findOne:", err.Error())
+		return nil
+	} else {
+		return &task
+	}
 }
 
 func CreateTask(task model.Task) error {
@@ -54,10 +75,11 @@ func CreateTask(task model.Task) error {
 		return errors.New("falha ao recuperar a collection de Tasks")
 	}
 
-	if result, err := tasks.InsertOne(ctx, task); err != nil {
+	task.Id = primitive.NewObjectID()
+
+	if _, err := tasks.InsertOne(ctx, task); err != nil {
 		return err
 	} else {
-		print(result, "resultado")
 		return nil
 	}
 }

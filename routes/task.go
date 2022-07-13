@@ -30,15 +30,7 @@ func getTasks(c *gin.Context) {
 }
 
 func getTask(c *gin.Context) {
-	param := c.Param("id")
-	id, err := strconv.Atoi(param)
-
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
-		return
-	}
+	id := c.Param("id")
 
 	if task := dao.GetTask(id); task == nil {
 		c.JSON(http.StatusNotFound, gin.H{
