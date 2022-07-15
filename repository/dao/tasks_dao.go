@@ -104,8 +104,30 @@ func UpdateTask(task model.Task) error {
 	}
 }
 
-func DeleteTask(id int) error {
-	return nil
+func DeleteTask(id string) error {
+	ctx, cancel := util.Context()
+
+	defer cancel()
+
+	objID, err := primitive.ObjectIDFromHex(id)
+
+	if err != nil {
+		return err
+	}
+
+	filter := bson.D{{"_id", objID}}
+
+	tasks := getCollection()
+
+	if res, err2 := tasks.DeleteOne(ctx, filter); err2 != nil {
+		return err2
+	} else {
+		if count := res.DeletedCount; count != 1 {
+			return errors.New("document not found")
+		} else {
+			return nil
+		}
+	}
 }
 
 func getCollection() *mongo.Collection {

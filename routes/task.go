@@ -5,7 +5,6 @@ import (
 	"firstProject/repository/dao"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"strconv"
 )
 
 func DefineTaskRoutes(c *gin.Engine) {
@@ -58,36 +57,17 @@ func createTask(c *gin.Context) {
 			return
 		}
 
-		c.JSON(http.StatusCreated, gin.H{
-			"status": "success",
-		})
+		c.String(200, "success")
 	}
 }
 
 func deleteTask(c *gin.Context) {
 	id := c.Param("id")
 
-	if id == "" {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Id inválido",
-		})
-		return
-	}
-
-	if v, err := strconv.Atoi(id); err == nil {
-		err2 := dao.DeleteTask(v)
-
-		if err2 != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"error": err2.Error(),
-			})
-		} else {
-			c.String(200, "Success")
-		}
+	if err := dao.DeleteTask(id); err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
 	} else {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
+		c.String(200, "success")
 	}
 }
 
