@@ -95,10 +95,11 @@ func UpdateTask(task model.Task) error {
 		return errors.New("collection not retrievable")
 	}
 
-	if id, err := tasks.UpdateByID(ctx, task.Id, task); err != nil {
+	filter := bson.D{{"_id", task.Id}}
+
+	if _, err := tasks.ReplaceOne(ctx, filter, task); err != nil {
 		return err
 	} else {
-		print("id da task atualizada:", id)
 		return nil
 	}
 }
