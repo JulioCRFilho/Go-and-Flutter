@@ -38,7 +38,7 @@ func TestSetDone(t *testing.T) {
 func TestGetDone(t *testing.T) {
 	task := Task{done: true}
 
-	got := task.GetDone()
+	got := task.Done()
 
 	if got != true {
 		t.Errorf("got the wrong value of done")

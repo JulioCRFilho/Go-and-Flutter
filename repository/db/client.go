@@ -1,10 +1,9 @@
 package db
 
 import (
-	"context"
+	util "firstProject/repository"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"time"
 )
 
 var Client *mongo.Client
@@ -16,7 +15,7 @@ func CreateClient() {
 	serverAPIOptions := options.ServerAPI(options.ServerAPIVersion1)
 	clientOptions := options.Client().ApplyURI(conn).SetServerAPIOptions(serverAPIOptions)
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := util.Context()
 
 	defer cancel()
 

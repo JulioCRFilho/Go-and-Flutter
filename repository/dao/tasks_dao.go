@@ -1,25 +1,21 @@
 package dao
 
 import (
-	"context"
 	"errors"
 	"firstProject/model"
 	util "firstProject/repository"
-	"firstProject/repository/db"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
-	"time"
 )
 
 var dbName = "tasks"
 
 func GetTasks() (*[]model.Task, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	ctx, cancel := util.Context()
 
 	defer cancel()
 
-	tasks := getCollection()
+	tasks := getCollection(dbName)
 
 	if tasks == nil {
 		return nil, errors.New("collection not retrievable")
@@ -45,7 +41,7 @@ func GetTask(id string) *model.Task {
 
 	defer cancel()
 
-	tasks := getCollection()
+	tasks := getCollection(dbName)
 
 	var task model.Task
 
@@ -69,7 +65,7 @@ func CreateTask(task model.Task) error {
 
 	defer cancel()
 
-	tasks := getCollection()
+	tasks := getCollection(dbName)
 
 	if tasks == nil {
 		return errors.New("falha ao recuperar a collection de Tasks")
@@ -89,7 +85,7 @@ func UpdateTask(task model.Task) error {
 
 	defer cancel()
 
-	tasks := getCollection()
+	tasks := getCollection(dbName)
 
 	if tasks == nil {
 		return errors.New("collection not retrievable")
@@ -117,7 +113,7 @@ func DeleteTask(id string) error {
 
 	filter := bson.D{{"_id", objID}}
 
-	tasks := getCollection()
+	tasks := getCollection(dbName)
 
 	if res, err2 := tasks.DeleteOne(ctx, filter); err2 != nil {
 		return err2
@@ -128,20 +124,4 @@ func DeleteTask(id string) error {
 			return nil
 		}
 	}
-}
-
-func getCollection() *mongo.Collection {
-	tasksDB := db.Client.Database(dbName)
-
-	if tasksDB == nil {
-		return nil
-	}
-
-	tasks := tasksDB.Collection(dbName)
-
-	if tasks == nil {
-		return nil
-	}
-
-	return tasks
 }
