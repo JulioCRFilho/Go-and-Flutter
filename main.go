@@ -16,7 +16,7 @@ func main() {
 	r := gin.Default()
 	r.Use(cors.Default())
 
-	routes.DefineTaskRoutes(r)
+	routes.Setup(r)
 
 	r.Use(static.Serve("/", static.LocalFile("./static", false)))
 
