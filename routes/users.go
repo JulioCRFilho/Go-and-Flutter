@@ -1,8 +1,10 @@
 package routes
 
 import (
+	"firstProject/model"
 	"firstProject/repository/dao"
 	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func DefineUserRoutes(c *gin.Engine) {
@@ -27,10 +29,25 @@ func getUsers(c *gin.Context) {
 }
 
 func getUser(c *gin.Context) {
+	//id := c.Param("id")
+	//
+	//if user, err := dao.
 }
 
 func createUser(c *gin.Context) {
+	var user model.User
 
+	if err := c.ShouldBind(&user); err != nil {
+		c.JSON(400, err.Error())
+	}
+
+	user.Id = primitive.NewObjectID()
+
+	if err := dao.CreateUser(user); err != nil {
+		c.JSON(400, err.Error())
+	} else {
+		c.JSON(200, "success")
+	}
 }
 
 func deleteUser(c *gin.Context) {
