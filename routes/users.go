@@ -29,9 +29,15 @@ func getUsers(c *gin.Context) {
 }
 
 func getUser(c *gin.Context) {
-	//id := c.Param("id")
-	//
-	//if user, err := dao.
+	id := c.Param("id")
+
+	if user, err := dao.GetUser(id); err != nil {
+		c.String(400, err.Error())
+	} else {
+		c.JSON(200, gin.H{
+			"user": user,
+		})
+	}
 }
 
 func createUser(c *gin.Context) {
@@ -51,9 +57,25 @@ func createUser(c *gin.Context) {
 }
 
 func deleteUser(c *gin.Context) {
+	id := c.Param("id")
 
+	if err := dao.DeleteUser(id); err != nil {
+		c.JSON(400, err.Error())
+	} else {
+		c.JSON(200, "success")
+	}
 }
 
 func updateUser(c *gin.Context) {
+	var user model.User
 
+	if err := c.ShouldBind(&user); err != nil {
+		c.String(400, err.Error())
+	}
+
+	if err := dao.UpdateUser(user); err != nil {
+		c.String(400, err.Error())
+	} else {
+		c.String(200, "success")
+	}
 }

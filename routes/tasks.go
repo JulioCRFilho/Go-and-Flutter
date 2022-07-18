@@ -87,7 +87,7 @@ func updateTask(c *gin.Context) {
 				"error": err2.Error(),
 			})
 		} else {
-			c.String(200, "Updated")
+			c.String(200, "success")
 		}
 	}
 }

@@ -87,10 +87,6 @@ func UpdateTask(task model.Task) error {
 
 	tasks := getCollection(dbName)
 
-	if tasks == nil {
-		return errors.New("collection not retrievable")
-	}
-
 	filter := bson.D{{"_id", task.Id}}
 
 	if _, err := tasks.ReplaceOne(ctx, filter, task); err != nil {
