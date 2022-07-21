@@ -44,15 +44,19 @@ func createUser(c *gin.Context) {
 	var user model.User
 
 	if err := c.ShouldBind(&user); err != nil {
-		c.JSON(400, err.Error())
+		c.String(400, err.Error())
 	}
 
 	user.Id = primitive.NewObjectID()
 
+	if err := user.HashPassword(); err != nil {
+		c.String(500, err.Error())
+	}
+
 	if err := dao.CreateUser(user); err != nil {
-		c.JSON(400, err.Error())
+		c.String(400, err.Error())
 	} else {
-		c.JSON(200, "success")
+		c.String(200, "success")
 	}
 }
 
