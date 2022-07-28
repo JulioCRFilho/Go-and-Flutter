@@ -1,6 +1,7 @@
 package main
 
 import (
+	"firstProject/middlewares"
 	"firstProject/repository/dao"
 	"firstProject/repository/db"
 	"firstProject/routes"
@@ -15,6 +16,7 @@ func main() {
 
 	r := gin.Default()
 	r.Use(cors.Default())
+	r.Use(middlewares.Writer())
 
 	routes.Setup(r)
 

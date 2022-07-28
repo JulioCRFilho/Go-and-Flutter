@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"firstProject/middlewares"
 	"firstProject/model"
 	"firstProject/repository/dao"
 	"github.com/gin-gonic/gin"
@@ -9,7 +10,7 @@ import (
 
 func DefineTaskRoutes(c *gin.Engine) {
 	c.GET("/tasks", getTasks)
-	r := c.Group("/task")
+	r := c.Group("/task").Use(middlewares.Auth())
 	{
 		r.GET(":id", getTask)
 		r.POST("", createTask)

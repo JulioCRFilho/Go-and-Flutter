@@ -9,17 +9,21 @@ import (
 var jwtKey = []byte("internalsecretinenviroment")
 
 type JWT struct {
-	Username string `json:"username"`
-	Email    string `json:"email"`
+	Email string `json:"email" binding:"required"`
+	Pass  string `json:"pass" binding:"required"`
 	jwt.StandardClaims
 }
 
-func (j *JWT) GenerateToken() (string, error) {
+func GenerateToken(email string, pass string) (string, error) {
 	expiration := time.Now().Add(1 * time.Hour)
-	j.StandardClaims = jwt.StandardClaims{
-		ExpiresAt: expiration.Unix(),
+	claims := &JWT{
+		email,
+		pass,
+		jwt.StandardClaims{
+			ExpiresAt: expiration.Unix(),
+		},
 	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, j)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString(jwtKey)
 }
 

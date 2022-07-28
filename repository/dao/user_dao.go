@@ -71,6 +71,24 @@ func GetUser(id string) (*model.User, error) {
 	}
 }
 
+func GetByEmail(email string) (*model.User, error) {
+	ctx, cancel := util.Context()
+
+	defer cancel()
+
+	collection := getCollection(userDB)
+
+	var user model.User
+
+	filter := bson.D{{"email", email}}
+
+	if err := collection.FindOne(ctx, filter).Decode(&user); err != nil {
+		return nil, err
+	} else {
+		return &user, nil
+	}
+}
+
 func DeleteUser(id string) error {
 	ctx, cancel := util.Context()
 

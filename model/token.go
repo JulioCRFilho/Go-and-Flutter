@@ -1,7 +1,6 @@
 package model
 
 type Token struct {
-	Id    string `bson:"_id"`
-	Email string `bson:"email"`
-	Pass  string `bson:"pass"`
+	Email string `json:"email"`
+	Pass  string `json:"pass"`
 }
