@@ -51,6 +51,7 @@ func createTask(c *gin.Context) {
 	userId := c.Param("user_id")
 
 	var task model.Task
+	task.Done = false
 
 	if err := c.ShouldBind(&task); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
