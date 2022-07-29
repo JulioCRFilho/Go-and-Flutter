@@ -10,7 +10,7 @@ import (
 
 var dbName = "tasks"
 
-func GetTasks() (*[]model.Task, error) {
+func GetTasks(id string) (*[]model.Task, error) {
 	ctx, cancel := util.Context()
 
 	defer cancel()
@@ -21,9 +21,17 @@ func GetTasks() (*[]model.Task, error) {
 		return nil, errors.New("collection not retrievable")
 	}
 
+	hexId, errHex := primitive.ObjectIDFromHex(id)
+
+	if errHex != nil {
+		return nil, errHex
+	}
+
 	var tasksBson []model.Task
 
-	if task, err := tasks.Find(ctx, bson.M{}); err != nil {
+	filter := bson.D{{"user_id", hexId}}
+
+	if task, err := tasks.Find(ctx, filter); err != nil {
 
 		return nil, err
 	} else {
@@ -36,7 +44,7 @@ func GetTasks() (*[]model.Task, error) {
 	}
 }
 
-func GetTask(id string) *model.Task {
+func GetTask(taskId string, userId string) *model.Task {
 	ctx, cancel := util.Context()
 
 	defer cancel()
@@ -45,15 +53,22 @@ func GetTask(id string) *model.Task {
 
 	var task model.Task
 
-	objId, err2 := primitive.ObjectIDFromHex(id)
+	userObjId, err2 := primitive.ObjectIDFromHex(userId)
 
 	if err2 != nil {
-		print("err2 :", err2.Error())
+		print("err2:", err2.Error())
 		return nil
 	}
 
-	if err := tasks.FindOne(ctx, bson.D{{"_id", objId}}).Decode(&task); err != nil {
-		print("erro findOne:", err.Error())
+	taskObjId, err3 := primitive.ObjectIDFromHex(taskId)
+
+	if err3 != nil {
+		print("err3 :", err3.Error())
+		return nil
+	}
+
+	filter := bson.D{{"_id", taskObjId}, {"user_id", userObjId}}
+	if err := tasks.FindOne(ctx, filter).Decode(&task); err != nil {
 		return nil
 	} else {
 		return &task
@@ -87,7 +102,7 @@ func UpdateTask(task model.Task) error {
 
 	tasks := getCollection(dbName)
 
-	filter := bson.D{{"_id", task.Id}}
+	filter := bson.D{{"_id", task.Id}, {"user_id", task.UserId}}
 
 	if _, err := tasks.ReplaceOne(ctx, filter, task); err != nil {
 		return err
@@ -96,7 +111,7 @@ func UpdateTask(task model.Task) error {
 	}
 }
 
-func DeleteTask(id string) error {
+func DeleteTask(id string, userId string) error {
 	ctx, cancel := util.Context()
 
 	defer cancel()
@@ -107,7 +122,13 @@ func DeleteTask(id string) error {
 		return err
 	}
 
-	filter := bson.D{{"_id", objID}}
+	userID, err3 := primitive.ObjectIDFromHex(userId)
+
+	if err3 != nil {
+		return err3
+	}
+
+	filter := bson.D{{"_id", objID}, {"user_id", userID}}
 
 	tasks := getCollection(dbName)
 

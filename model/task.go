@@ -4,10 +4,11 @@ import "go.mongodb.org/mongo-driver/bson/primitive"
 
 type Task struct {
 	Id          primitive.ObjectID `bson:"_id"`
-	Name        string             `json:"name" binding:"required"`
+	UserId      primitive.ObjectID `bson:"user_id"`
+	Name        string             `bson:"name" binding:"required"`
 	done        bool               `default:"false"`
-	DueDate     string             `json:"dueDate" binding:"required"`
-	CreatedDate string             `json:"createdDate" binding:"required"`
+	DueDate     string             `bson:"dueDate" binding:"required"`
+	CreatedDate string             `bson:"createdDate" binding:"required"`
 }
 
 func (t *Task) Done() bool {
