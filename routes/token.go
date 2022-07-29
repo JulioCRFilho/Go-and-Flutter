@@ -27,14 +27,12 @@ func generateToken(c *gin.Context) {
 		c.String(500, err.Error())
 	} else {
 		if err2 := user.CheckPassword(token.Pass); err2 != nil {
-			print("terceiro erro", err2.Error())
 			c.String(401, err2.Error())
 			return
 		}
 
 		if stringToken, err3 := auth.GenerateToken(user.Email, user.Pass); err3 != nil {
 			c.String(500, err3.Error())
-			print("quarto erro", err3.Error())
 		} else {
 			c.JSON(200, gin.H{
 				"token": stringToken,
