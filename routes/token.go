@@ -11,7 +11,6 @@ func DefineTokenRoutes(c *gin.Engine) {
 	group := c.Group("/auth")
 	{
 		group.POST("/token", generateToken)
-		group.POST("/validate", validateToken)
 	}
 }
 
@@ -39,8 +38,4 @@ func generateToken(c *gin.Context) {
 			})
 		}
 	}
-}
-
-func validateToken(c *gin.Context) {
-
 }

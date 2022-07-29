@@ -14,6 +14,7 @@ func Auth() gin.HandlerFunc {
 				"error": "lacking access token",
 			})
 			c.Abort()
+			return
 		}
 
 		if err := auth.ValidateToken(token); err != nil {
@@ -21,6 +22,7 @@ func Auth() gin.HandlerFunc {
 				"error": err.Error(),
 			})
 			c.Abort()
+			return
 		}
 
 		c.Next()
