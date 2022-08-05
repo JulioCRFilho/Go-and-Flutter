@@ -1,10 +1,12 @@
 package routes
 
 import (
+	"firstProject/middlewares"
 	"firstProject/model"
 	"firstProject/repository/auth"
 	"firstProject/repository/dao"
 	"github.com/gin-gonic/gin"
+	json2 "github.com/goccy/go-json"
 )
 
 func DefineTokenRoutes(c *gin.Engine) {
@@ -17,7 +19,7 @@ func DefineTokenRoutes(c *gin.Engine) {
 func generateToken(c *gin.Context) {
 	var token model.Token
 
-	if err := c.ShouldBind(&token); err != nil {
+	if err := json2.Unmarshal(middlewares.RawCache(), &token); err != nil {
 		c.String(500, err.Error())
 		return
 	}

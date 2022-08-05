@@ -16,6 +16,7 @@ func main() {
 
 	r := gin.Default()
 	r.Use(cors.Default())
+	r.Use(middlewares.Cache())
 	r.Use(middlewares.Writer())
 
 	routes.Setup(r)

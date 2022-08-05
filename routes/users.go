@@ -1,9 +1,11 @@
 package routes
 
 import (
+	"firstProject/middlewares"
 	"firstProject/model"
 	"firstProject/repository/dao"
 	"github.com/gin-gonic/gin"
+	json2 "github.com/goccy/go-json"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -43,7 +45,7 @@ func getUser(c *gin.Context) {
 func createUser(c *gin.Context) {
 	var user model.User
 
-	if err := c.ShouldBind(&user); err != nil {
+	if err := json2.Unmarshal(middlewares.RawCache(), &user); err != nil {
 		c.String(400, err.Error())
 	}
 
@@ -73,7 +75,7 @@ func deleteUser(c *gin.Context) {
 func updateUser(c *gin.Context) {
 	var user model.User
 
-	if err := c.ShouldBind(&user); err != nil {
+	if err := json2.Unmarshal(middlewares.RawCache(), &user); err != nil {
 		c.String(400, err.Error())
 	}
 

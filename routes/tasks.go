@@ -5,6 +5,7 @@ import (
 	"firstProject/model"
 	"firstProject/repository/dao"
 	"github.com/gin-gonic/gin"
+	json2 "github.com/goccy/go-json"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
 )
@@ -51,29 +52,32 @@ func createTask(c *gin.Context) {
 	userId := c.Param("user_id")
 
 	var task model.Task
-	task.Done = false
 
-	if err := c.ShouldBind(&task); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+	if err := json2.Unmarshal(middlewares.RawCache(), &task); err != nil {
+		c.JSON(500, gin.H{
 			"error": err.Error(),
 		})
+		print("error unmarshal:", err.Error())
+		return
+	}
+
+	task.Done = false
+
+	if objId, err3 := primitive.ObjectIDFromHex(userId); err3 != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err3.Error(),
+		})
 	} else {
-		if objId, err3 := primitive.ObjectIDFromHex(userId); err3 != nil {
+		task.UserId = objId
+
+		if err2 := dao.CreateTask(task); err2 != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
-				"error": err3.Error(),
+				"error": err2.Error(),
 			})
-		} else {
-			task.UserId = objId
-
-			if err2 := dao.CreateTask(task); err2 != nil {
-				c.JSON(http.StatusBadRequest, gin.H{
-					"error": err2.Error(),
-				})
-				return
-			}
-
-			c.String(200, "success")
+			return
 		}
+
+		c.String(200, "success")
 	}
 }
 
@@ -92,7 +96,7 @@ func updateTask(c *gin.Context) {
 	userId := c.Param("user_id")
 
 	var task model.Task
-	err := c.ShouldBind(&task)
+	err := json2.Unmarshal(middlewares.RawCache(), &task)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
