@@ -1,0 +1,8 @@
+{
+  "server": "mongodb+srv",
+  "user": "root",
+  "pass": "yLcsbwOCpz45E2vF",
+  "cluster": "tasks.y05gh",
+  "host": "mongodb.net",
+  "optionals": "retryWrites=true&w=majority"
+}
